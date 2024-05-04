@@ -156,7 +156,6 @@ backup:
 	@echo "Commands for backup"
 
 depends:
-	chmod u+x tools/install_depends.sh
 	chmod u+x tools/check_and_install.sh
 	./tools/check_and_install.sh
 

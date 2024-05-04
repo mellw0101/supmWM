@@ -34,12 +34,15 @@ class FileHandler
 	/* Methods 	   */
 		bool append(const string &text) 
 		{
-			ofstream file(m_filename, ios::app);// Open in append mode
+			// Open in append mode
+			ofstream file(m_filename, ios::app);
 
 			if (!file.is_open()) 
 			{
-				return false;// Return false if file couldn't be opened
+				// Return false if file couldn't be opened
+				return false;
 			}
+			
 			file << text;// Append text
 			file.close();
 			return true;
