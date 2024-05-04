@@ -1,6 +1,8 @@
 #include "tools/globals.h"
 #include "tools/defines.h"
 
+#include <cstddef>
+#include <cstdint>
 #include <xcb/xcb.h>
 #include <xcb/xproto.h>
 
@@ -32,8 +34,10 @@ static void setup_wm()
     setup = xcb_get_setup(conn);
     iter = xcb_setup_roots_iterator(setup);
     screen = iter.data;
+    xcb_void_cookie_t cookie;
+    xcb_generic_error_t *error = nullptr;
 
-    xcb_void_cookie_t cookie = xcb_change_window_attributes_checked
+    cookie = xcb_change_window_attributes_checked
     (
         conn,
         screen->root,
@@ -44,10 +48,33 @@ static void setup_wm()
         }
     );
 
-    xcb_generic_error_t *error = xcb_request_check(conn, cookie);
+    error = xcb_request_check(conn, cookie);
     if (error)
     {
         loutE << "Error: Another window manager is already running or failed to set SubstructureRedirect mask" << loutEND;
+        free(error);
+    }
+
+    cookie = xcb_change_window_attributes_checked
+    (
+        conn,
+        screen->root,
+        XCB_CW_EVENT_MASK,
+        (const uint32_t[])
+        {
+            XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT |
+            XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |  
+            XCB_EVENT_MASK_STRUCTURE_NOTIFY |
+            XCB_EVENT_MASK_BUTTON_PRESS |          
+            XCB_EVENT_MASK_FOCUS_CHANGE
+        }
+    );
+
+    error = nullptr;
+    error = xcb_request_check(conn, cookie);
+    if (error)
+    {
+        loutE << "Failed to set event mask" << '\n';
         free(error);
     }
 }
