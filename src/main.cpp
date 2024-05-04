@@ -25,21 +25,7 @@ static void event_handler(xcb_generic_event_t* ev)
         }
     }
 }
-xcb_void_cookie_t cookie = xcb_change_window_attributes_checked
-                (
-                    conn,
-                    root,
-                    XCB_CW_EVENT_MASK,
-                    (const uint32_t[1])
-                    {
-                        XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY
-                    }
-                );
-                xcb_generic_error_t *error = xcb_request_check( conn, cookie );
-                if ( !error ) return true;
-                
-                loutE << "Error: Another window manager is already running or failed to set SubstructureRedirect mask" << loutEND;
-                free( error );
+
 static void setup_wm()
 {
     conn = xcb_connect(nullptr, nullptr);
