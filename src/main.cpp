@@ -10,6 +10,7 @@ using namespace std;
 
 xcb_connection_t* conn = nullptr;
 xcb_screen_t* screen = nullptr;
+xcb_screen_iterator_t iter;
 const xcb_setup_t* setup = nullptr;
 
 static void quit()
