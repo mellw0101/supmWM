@@ -34,9 +34,7 @@ static void event_handler(xcb_generic_event_t* ev)
         {
             auto e = reinterpret_cast<xcb_key_press_event_t *>(ev);
 
-            if (e->detail == key_code.q
-            &&  e->state & SHIFT
-            &&  e->state & ALT)
+            if (e->detail == key_code.q)
             {
                 exit(EXIT_SUCCESS);
             }
