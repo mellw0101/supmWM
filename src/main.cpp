@@ -21,7 +21,7 @@ const xcb_setup_t* setup = nullptr;
 __key_codes__ key_code;
 static window root;
 
-static void event_handler(xcb_generic_event_t* ev)
+void event_handler(xcb_generic_event_t* ev)
 {
     switch (ev->response_type & ~0x80)
     {
@@ -44,7 +44,7 @@ static void event_handler(xcb_generic_event_t* ev)
     }
 }
 
-static void setup_wm()
+void setup_wm()
 {
     conn = xcb_connect(nullptr, nullptr);
     setup = xcb_get_setup(conn);
