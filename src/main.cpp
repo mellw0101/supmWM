@@ -46,23 +46,23 @@ void handle_event()
 
 int main()
 {
-    xcb_connection_t *connection = xcb_connect(NULL, NULL);
-    if (xcb_connection_has_error(connection))
+    conn = xcb_connect(NULL, NULL);
+    if (xcb_connection_has_error(conn))
     {
         std::cerr << "Error: Can't open display" << std::endl;
         return -1;
     }
 
-    const xcb_setup_t *setup = xcb_get_setup(connection);
+    const xcb_setup_t *setup = xcb_get_setup(conn);
     xcb_screen_iterator_t iter = xcb_setup_roots_iterator(setup);
     xcb_screen_t *screen = iter.data;
 
     // Create the window
-    xcb_window_t window = xcb_generate_id(connection);
+    xcb_window_t window = xcb_generate_id(conn);
     uint32_t values[2] = {screen->white_pixel, XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_EXPOSURE};
     xcb_create_window
     (
-        connection,
+        conn,
         XCB_COPY_FROM_PARENT,
         window,
         screen->root,
@@ -78,10 +78,10 @@ int main()
     );
 
     // Map the window (make it visible)
-    xcb_map_window(connection, window);
+    xcb_map_window(conn, window);
 
     // Flush commands to X server
-    xcb_flush(connection);
+    xcb_flush(conn);
 
     // // Event loop
     // xcb_generic_event_t *event;
@@ -109,7 +109,7 @@ int main()
     handle_event();
 
     // Close the connection to the X server
-    xcb_destroy_window(connection, window);
-    xcb_disconnect(connection);
+    xcb_destroy_window(conn, window);
+    xcb_disconnect(conn);
     return 0;
 }
