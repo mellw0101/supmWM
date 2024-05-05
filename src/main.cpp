@@ -3,11 +3,12 @@
 #include "tools/defines.h"
 #include "keykodes.cpp"
 
-#include <cstddef>
+// #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
 #include <xcb/xcb.h>
 #include <xcb/xproto.h>
+// #include <array>
 
 #include "window.cpp"
 
@@ -18,6 +19,7 @@ xcb_screen_t* screen = nullptr;
 xcb_screen_iterator_t iter;
 const xcb_setup_t* setup = nullptr;
 __key_codes__ key_code;
+static window root;
 
 static void event_handler(xcb_generic_event_t* ev)
 {
@@ -50,19 +52,14 @@ static void setup_wm()
     setup = xcb_get_setup(conn);
     iter = xcb_setup_roots_iterator(setup);
     screen = iter.data;
+
+    root = screen->root;
+
     xcb_void_cookie_t cookie;
     xcb_generic_error_t *error = nullptr;
 
-    cookie = xcb_change_window_attributes_checked
-    (
-        conn,
-        screen->root,
-        XCB_CW_EVENT_MASK,
-        (const uint32_t[1])
-        {
-            XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY
-        }
-    );
+    uint32_t values[1] = {XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY};
+    cookie = root.apply_event_mask(values);
 
     error = xcb_request_check(conn, cookie);
     if (error)
@@ -71,20 +68,15 @@ static void setup_wm()
         free(error);
     }
 
-    cookie = xcb_change_window_attributes_checked
-    (
-        conn,
-        screen->root,
-        XCB_CW_EVENT_MASK,
-        (const uint32_t[])
-        {
-            XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT |
-            XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |  
-            XCB_EVENT_MASK_STRUCTURE_NOTIFY |
-            XCB_EVENT_MASK_BUTTON_PRESS |          
-            XCB_EVENT_MASK_FOCUS_CHANGE
-        }
-    );
+    uint32_t values2[1] =
+    {
+        XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT |
+        XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |  
+        XCB_EVENT_MASK_STRUCTURE_NOTIFY |
+        XCB_EVENT_MASK_BUTTON_PRESS |          
+        XCB_EVENT_MASK_FOCUS_CHANGE
+    };
+    cookie = root.apply_event_mask(values2);
 
     error = nullptr;
     error = xcb_request_check(conn, cookie);
