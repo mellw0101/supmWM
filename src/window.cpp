@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <xcb/xcb.h>
 #include <xcb/xproto.h>
 #include "tools/globals.h"
@@ -34,5 +35,24 @@ class window
             );
 
             return cookie;
+        }
+
+        void make_window
+        (
+            uint32_t depth,
+            uint32_t wid,
+            uint32_t parent,
+            int16_t x,
+            int16_t y,
+            uint16_t width,
+            uint16_t height,
+            uint32_t border_width,
+            uint8_t _class,
+            uint32_t visual,
+            uint32_t value_mask,
+            const void* value_list
+        )
+        {
+
         }
 };

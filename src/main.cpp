@@ -82,30 +82,6 @@ int main()
 
     // Flush commands to X server
     xcb_flush(conn);
-
-    // // Event loop
-    // xcb_generic_event_t *event;
-    // bool finished = false;
-    // while (!finished && (event = xcb_wait_for_event(connection)))
-    // {
-    //     switch (event->response_type & ~0x80)
-    //     {
-    //         case XCB_EXPOSE:
-    //             // Window exposed, redraw (not necessary here since it's just white)
-    //             break;
-    //         case XCB_KEY_PRESS:
-    //         {
-    //             xcb_key_press_event_t *kp = (xcb_key_press_event_t *)event;
-    //             if (kp->detail == 24) // 'q' key on a QWERTY keyboard
-    //             {
-    //                 finished = true;
-    //             }
-    //             break;
-    //         }
-    //     }
-    //     free(event);
-    // }
-
     handle_event();
 
     // Close the connection to the X server
