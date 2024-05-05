@@ -1,13 +1,15 @@
 #include "tools/globals.h"
+#include "tools/logger.h"
 #include "tools/defines.h"
+#include "keykodes.cpp"
 
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <xcb/xcb.h>
 #include <xcb/xproto.h>
 
 #include "window.cpp"
-#include "tools/logger.h"
 
 using namespace std;
 
@@ -15,6 +17,7 @@ xcb_connection_t* conn = nullptr;
 xcb_screen_t* screen = nullptr;
 xcb_screen_iterator_t iter;
 const xcb_setup_t* setup = nullptr;
+__key_codes__ key_code;
 
 static void event_handler(xcb_generic_event_t* ev)
 {
@@ -23,7 +26,21 @@ static void event_handler(xcb_generic_event_t* ev)
     {
         case XCB_EXPOSE:
         {
+            break;
+        }
 
+        case XCB_KEY_PRESS:
+        {
+            auto e = reinterpret_cast<xcb_key_press_event_t *>(ev);
+
+            if (e->detail == key_code.q
+            &&  e->state & SHIFT
+            &&  e->state & ALT)
+            {
+                exit(EXIT_SUCCESS);
+            }
+
+            break;
         }
     }
 }
@@ -77,6 +94,8 @@ static void setup_wm()
         loutE << "Failed to set event mask" << '\n';
         free(error);
     }
+
+    key_code.init();
 }
 
 int main()
