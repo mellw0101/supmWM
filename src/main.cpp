@@ -21,8 +21,7 @@ __key_codes__ key_code;
 
 static void event_handler(xcb_generic_event_t* ev)
 {
-    uint8_t evType = ev->response_type & ~0x80;
-    switch (evType)
+    switch (ev->response_type & ~0x80)
     {
         case XCB_EXPOSE:
         {
@@ -110,5 +109,6 @@ int main()
         if (!ev) continue;
 
         event_handler(ev);
+        free(ev);
     }
 }
