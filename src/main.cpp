@@ -18,19 +18,6 @@ class window
         uint32_t _window;
 
     public:
-        window() {}
-
-        operator uint32_t()
-        {
-            return _window;
-        }
-    
-        window& operator=(uint32_t new_window)
-        {
-            _window = new_window;
-            return *this;
-        }
-
         void create_window(
             uint32_t parent,
             int16_t  x,
@@ -83,8 +70,8 @@ int main()
     setup_wm();
 
     // Create the window
-    uint32_t values[2] = {screen->white_pixel, XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_EXPOSURE};
     xcb_window_t window = xcb_generate_id(conn);
+    uint32_t values[2] = {screen->white_pixel, XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_EXPOSURE};
     xcb_create_window(conn, XCB_COPY_FROM_PARENT, window, screen->root,
                       0, 0, 800, 600, 0, XCB_WINDOW_CLASS_INPUT_OUTPUT,
                       screen->root_visual, XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK, values);
