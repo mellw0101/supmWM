@@ -9,6 +9,7 @@
 using namespace std;
 
 xcb_connection_t* conn;
+xcb_screen_t* screen;
 
 class window
 {
