@@ -13,7 +13,8 @@
 
 using namespace std;
 
-xcb_connection_t* conn;
+xcb_connection_t* conn = nullptr;
+xcb_screen_t* screen = nullptr;
 
 int main()
 {
@@ -26,7 +27,7 @@ int main()
 
     const xcb_setup_t* setup = xcb_get_setup(conn);
     xcb_screen_iterator_t iter = xcb_setup_roots_iterator(setup);
-    xcb_screen_t* screen = iter.data;
+    screen = iter.data;
 
     window window;
 
