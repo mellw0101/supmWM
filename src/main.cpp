@@ -82,27 +82,12 @@ int main()
 {
     setup_wm();
 
-    // // Create the window
-    // xcb_window_t window = xcb_generate_id(conn);
-    // xcb_create_window(conn, XCB_COPY_FROM_PARENT, window, screen->root,
-    //                   0, 0, 800, 600, 0, XCB_WINDOW_CLASS_INPUT_OUTPUT,
-    //                   screen->root_visual, XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK, values);
-
-    window window;
+    // Create the window
     uint32_t values[2] = {screen->white_pixel, XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_EXPOSURE};
-    window.create_window
-    (
-        screen->root,
-        0,
-        0,
-        100,
-        200,
-        0,
-        XCB_WINDOW_CLASS_INPUT_OUTPUT,
-        screen->root_visual,
-        XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK,
-        values
-    );
+    xcb_window_t window = xcb_generate_id(conn);
+    xcb_create_window(conn, XCB_COPY_FROM_PARENT, window, screen->root,
+                      0, 0, 800, 600, 0, XCB_WINDOW_CLASS_INPUT_OUTPUT,
+                      screen->root_visual, XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK, values);
 
     // Map the window (make it visible)
     xcb_map_window(conn, window);
