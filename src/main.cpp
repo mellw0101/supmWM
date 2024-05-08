@@ -14,7 +14,7 @@
 using namespace std;
 
 xcb_connection_t* conn;
-window root;
+xcb_screen_t *screen;
 
 int setup_wm()
 {
@@ -27,7 +27,7 @@ int setup_wm()
 
     const xcb_setup_t *setup = xcb_get_setup(conn);
     xcb_screen_iterator_t iter = xcb_setup_roots_iterator(setup);
-    xcb_screen_t *screen = iter.data;
+    screen = iter.data;
 
     return 0;
 }
