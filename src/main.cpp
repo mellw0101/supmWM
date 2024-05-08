@@ -8,13 +8,14 @@
 // #include <array>
 
 #include "window.cpp"
+#include "event.h"
 
 using namespace std;
 
 xcb_connection_t* conn;
 window root;
 
-void handle_event()
+/* void handle_event()
 {
     // Event loop
     xcb_generic_event_t *event;
@@ -33,7 +34,8 @@ void handle_event()
             {
                 xcb_key_press_event_t *e = (xcb_key_press_event_t *)event;
                 if (e->detail == 24
-                &&  e->state & ALT)
+                &&  e->state & ALT
+                &&  e->state & SHIFT)
                 {
                     finished = true;
                 }
@@ -44,7 +46,7 @@ void handle_event()
 
         free(event);
     }
-}
+} */
 
 int main()
 {
