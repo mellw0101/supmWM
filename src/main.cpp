@@ -2,6 +2,7 @@
 #include "tools/globals.h"
 #include "event.h"
 
+#include <cstdint>
 #include <cstdlib>
 #include <xcb/xcb.h>
 #include <xcb/xproto.h>
@@ -17,17 +18,37 @@ class window
         uint32_t _window;
 
     public:
+        void create_window(
+            uint32_t parent,
+            int16_t  x,
+            int16_t  y,
+            uint16_t width,
+            uint16_t height,
+            uint16_t border_width = 0,
+            uint16_t _class = XCB_WINDOW_CLASS_INPUT_OUTPUT,
+            uint32_t visual = 0L,
+            uint32_t value_mask = 0,
+            const void* value_list = nullptr 
+        )
+        {
+
+        }
 
 };
 
-int main()
+void setup_wm()
 {
     conn = xcb_connect(NULL, NULL);
     if (xcb_connection_has_error(conn))
     {
         cerr << "Error: Can't open display" << endl;
-        return -1;
+        return;
     }
+}
+
+int main()
+{
+    setup_wm();
 
     const xcb_setup_t* setup = xcb_get_setup(conn);
     xcb_screen_iterator_t iter = xcb_setup_roots_iterator(setup);
