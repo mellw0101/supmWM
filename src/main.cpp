@@ -31,8 +31,9 @@ void handle_event()
             
             case XCB_KEY_PRESS:
             {
-                xcb_key_press_event_t *kp = (xcb_key_press_event_t *)event;
-                if (kp->detail == 24) // 'q' key on a QWERTY keyboard
+                xcb_key_press_event_t *e = (xcb_key_press_event_t *)event;
+                if (e->detail == 24
+                &&  e->state & ALT)
                 {
                     finished = true;
                 }

@@ -69,5 +69,12 @@ using u32 = unsigned int;
     #define R_MOUSE_BUTTON XCB_BUTTON_INDEX_3
 //
 
+/* MOD_MASK DEFENITIONS */
+    #define SHIFT   XCB_MOD_MASK_SHIFT
+    #define ALT     XCB_MOD_MASK_1
+    #define CTRL    XCB_MOD_MASK_CONTROL
+    #define SUPER   XCB_MOD_MASK_4
+//
+
 #define NONE 0
 #define DEFAULT_FONT "7x14"
