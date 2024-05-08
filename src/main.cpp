@@ -18,6 +18,19 @@ class window
         uint32_t _window;
 
     public:
+        window() {}
+
+        operator uint32_t()
+        {
+            return _window;
+        }
+    
+        window& operator=(uint32_t new_window)
+        {
+            _window = new_window;
+            return *this;
+        }
+
         void create_window(
             uint32_t parent,
             int16_t  x,
@@ -28,12 +41,28 @@ class window
             uint16_t _class = XCB_WINDOW_CLASS_INPUT_OUTPUT,
             uint32_t visual = 0L,
             uint32_t value_mask = 0,
-            const void* value_list = nullptr 
-        )
+            const void* value_list = nullptr)
         {
+            _window = xcb_generate_id(conn);
 
+            xcb_create_window
+            (
+                conn,
+                XCB_COPY_FROM_PARENT,
+                _window,
+                parent,
+                x,
+                y,
+                width,
+                height,
+                border_width,
+                _class,
+                visual,
+                value_mask,
+                value_list
+            );
+            xcb_flush(conn);
         }
-
 };
 
 void setup_wm()
@@ -44,22 +73,36 @@ void setup_wm()
         cerr << "Error: Can't open display" << endl;
         return;
     }
+    const xcb_setup_t* setup = xcb_get_setup(conn);
+    xcb_screen_iterator_t iter = xcb_setup_roots_iterator(setup);
+    xcb_screen_t* screen = iter.data;
 }
 
 int main()
 {
     setup_wm();
 
-    const xcb_setup_t* setup = xcb_get_setup(conn);
-    xcb_screen_iterator_t iter = xcb_setup_roots_iterator(setup);
-    xcb_screen_t* screen = iter.data;
+    // // Create the window
+    // xcb_window_t window = xcb_generate_id(conn);
+    // xcb_create_window(conn, XCB_COPY_FROM_PARENT, window, screen->root,
+    //                   0, 0, 800, 600, 0, XCB_WINDOW_CLASS_INPUT_OUTPUT,
+    //                   screen->root_visual, XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK, values);
 
-    // Create the window
-    xcb_window_t window = xcb_generate_id(conn);
+    window window;
     uint32_t values[2] = {screen->white_pixel, XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_EXPOSURE};
-    xcb_create_window(conn, XCB_COPY_FROM_PARENT, window, screen->root,
-                      0, 0, 800, 600, 0, XCB_WINDOW_CLASS_INPUT_OUTPUT,
-                      screen->root_visual, XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK, values);
+    window.create_window
+    (
+        screen->root,
+        0,
+        0,
+        100,
+        200,
+        0,
+        XCB_WINDOW_CLASS_INPUT_OUTPUT,
+        screen->root_visual,
+        XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK,
+        values
+    );
 
     // Map the window (make it visible)
     xcb_map_window(conn, window);
