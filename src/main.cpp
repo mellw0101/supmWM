@@ -1,20 +1,23 @@
 #include "keykodes.cpp"
+#include "tools/globals.h"
+#include "event.h"
 
-// #include <cstddef>
-// #include <cstdint>
 #include <cstdlib>
 #include <xcb/xcb.h>
 #include <xcb/xproto.h>
-// #include <array>
-
-#include "tools/globals.h"
-#include "window.cpp"
-#include "event.h"
 
 using namespace std;
 
-xcb_connection_t* conn = nullptr;
-xcb_screen_t* screen = nullptr;
+xcb_connection_t* conn;
+
+class window
+{
+    private:
+        uint32_t _window;
+
+    public:
+
+};
 
 int main()
 {
@@ -27,14 +30,20 @@ int main()
 
     const xcb_setup_t* setup = xcb_get_setup(conn);
     xcb_screen_iterator_t iter = xcb_setup_roots_iterator(setup);
-    screen = iter.data;
+    xcb_screen_t* screen = iter.data;
 
-    window window;
+    // Create the window
+    xcb_window_t window = xcb_generate_id(conn);
+    uint32_t values[2] = {screen->white_pixel, XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_EXPOSURE};
+    xcb_create_window(conn, XCB_COPY_FROM_PARENT, window, screen->root,
+                      0, 0, 800, 600, 0, XCB_WINDOW_CLASS_INPUT_OUTPUT,
+                      screen->root_visual, XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK, values);
 
-    window.create_simple(screen->root, 0, 0, screen->width_in_pixels, screen->height_in_pixels);
-    window.set_back_color(screen->white_pixel);
-    window.apply_event_mask(XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_EXPOSURE);
-    window.map();
+    // Map the window (make it visible)
+    xcb_map_window(conn, window);
+
+    // Flush commands to X server
+    xcb_flush(conn);
 
     handle_event();
 
