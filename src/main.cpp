@@ -12,6 +12,7 @@
 using namespace std;
 
 xcb_connection_t* conn;
+window root;
 
 void handle_event()
 {
@@ -57,8 +58,8 @@ int main()
     xcb_screen_iterator_t iter = xcb_setup_roots_iterator(setup);
     xcb_screen_t *screen = iter.data;
 
-    // Create the window
-    xcb_window_t window = xcb_generate_id(conn);
+    
+    uint32_t window = xcb_generate_id(conn);
     uint32_t values[2] = {screen->white_pixel, XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_EXPOSURE};
     xcb_create_window
     (

@@ -68,3 +68,6 @@ using u32 = unsigned int;
     #define L_MOUSE_BUTTON XCB_BUTTON_INDEX_1
     #define R_MOUSE_BUTTON XCB_BUTTON_INDEX_3
 //
+
+#define NONE 0
+#define DEFAULT_FONT "7x14"
